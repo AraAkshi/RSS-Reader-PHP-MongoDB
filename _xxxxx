@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RSS Reader</title>
+  <!-- CSS only -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"     integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+  <!-- JS, Popper.js, and jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+<script>
+  function showRSS(str) {
+        console.log("THe click event");
+        console.log(str);
+    if (str.length == 0) {
+      document.getElementById("rssOutput").innerHTML = "";
+      return;  
+    } else {
+      document.getElementById("rssOutput").innerHTML = "Data Added";
+    }
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("rssOutput").innerHTML = "Data Successfully Added";
+      }
+    };
+    xhttp.open("GET", "getrss.php?q=" + str, true);
+    xhttp.send();
+  }    
+  function getData() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("dbOutput").innerHTML = this.responseText;
+      }
+    };
+    xhttp.open("GET", "getData.php", true);
+    xhttp.send();
+  }
+  function getDataKeyword() {
+    var keyword = document.getElementById("keyword").value;
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("dbOutput").innerHTML = this.responseText;
+      }
+    };
+    xhttp.open("GET", "dbDataWithKeyword.php?keyword="+keyword, true);
+    xhttp.send();
+  }
+  function createXML() {
+    var keyword = document.getElementById("keyword").value;
+    window.open("createXML.php?keyword="+keyword, "_blank"); 
+            // var xhttp = new XMLHttpRequest();
+            // xhttp.onreadystatechange = function () {
+            //     if (this.readyState == 4 && this.status == 200) {
+            //         document.getElementById("dbOutput").innerHTML = this.responseText;
+            //     }
+            // };
+            
+            // xhttp.open("GET", "xmlGenerator.php?keyword="+keyword, true);
+            // xhttp.send();
+  }
+  function addData(){
+    var title = document.getElementById("title").value;
+    var description = document.getElementById("description").value;
+    var link = document.getElementById("link").value;
+    var imglink = document.getElementById("imglink").value;
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("formStatus").innerHTML = "Form Submitted";
+      }
+    };
+    xhttp.open("GET", "addData.php?title="+title+"&description="+description+"&link="+link+"&imglink="+imglink, true);
+    xhttp.send();
+  }
+</script>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="text-center">
+      <h2>RSS READER</h2>
+    </div>
+    <div class="row">
+      <div class="text-center">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">        
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="#">INSERT DATA</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">INSERT DATA</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">INSERT DATA</a>
+              </li>
+              
+              
+            </ul>
+          </div>
+        </nav>
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">INSERT DATA</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">VIEW DATA</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">INSERT CUSTOM DATA</a>
+          </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+          <div class="tab-pane fade show active" id="pills-home"  role="tabpanel" aria-labelledby="pills-home-tab">
+            <h6>SELECT DATA SOURCE TO FEED TO DATABASE</h6>
+            <form>
+              <select onchange="showRSS(this.value)">
+                <option value="">Select a RSS-feed:</option>
+                <option value="Google">Google News</option>
+              </select>
+            </form>
+            <br>
+            <div id="rssOutput"></div>
+          </div>
+
+          <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <div class="row">
+              <div class="col-sm-6, col-md-6 col-lg-6">
+                <button type="button" class="btn btn-success" onclick="getData()">VIEW DATA</button>
+              </div>
+              <div class="col-sm-6, col-md-6 col-lg-6">
+                <div class="row">
+                  <div class="col-md-6 col-sm-6 col-lg-6">
+                    <input type="text" class="form-control" id="keyword" name="keyword" placeholder="Enter Keyword">
+                  </div>
+                  <div class="col-md-6 col-sm-6 col-lg-6">
+                    <button type="button" class="btn btn-danger" onclick="getDataKeyword()">View Data for Keyword</button>
+                    <button type="button" class="btn btn-dark" onclick="createXML()"> CREATE XML</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br>
+            <div id="dbOutput">RSS-feed will be listed here...</div>
+          </div>
+
+          <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                  <form action="#" onsubmit="addData(); return false">
+                    <div class="form-group">
+                      <label for="title">Title</label>
+                      <input type="text" class="form-control" id="title" name="title">
+                    </div>
+                    <div class="form-group">
+                      <label for="description">Description</label>
+                      <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label for="link">Item Link</label>
+                      <input class="form-control" id="link" name="link"></textarea>
+                    </div>
+                      <div class="form-group">
+                        <label for="imglink">Image Link</label>
+                        <input class="form-control" id="imglink" name="imglink"></textarea>
+                      </div>
+                        <input type="submit" class="btn btn-warning" value="Submit Form">
+                  </form>
+                  <div id="formStatus"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
